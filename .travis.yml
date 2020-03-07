@@ -1,12 +1,12 @@
 language: ruby
 rvm:
-  - 2.1.10
-  - 2.2.7
   - 2.3.4
 env:
   global:
     - ARACHNI="arachni-1.5.1-0.5.12"
     - ARACHNI_URL="https://github.com/Arachni/arachni/releases/download/v1.5.1/arachni-1.5.1-0.5.12-linux-x86_64.tar.gz"
+    - GOBUSTER_URL="https://github.com/OJ/gobuster/releases/download/v3.0.1/gobuster-linux-amd64.7z"
+    - GOBUSTER="gobuster-linux-amd64.7z"
 before_install:
   - git submodule update --init --recursive --force
   - gem update bundler
@@ -14,12 +14,13 @@ before_script:
   - sudo apt-get update
   - sudo apt-get install build-essential git libxml2 libxml2-dev
     libxslt-dev libcurl4-openssl-dev libsqlite3-dev libyaml-dev zlib1g-dev
-    python-dev python-pip python-setuptools curl nmap w3af-console wget golang
+    python-dev python-pip python-setuptools curl nmap w3af-console wget golang p7zip-full
   - export SSLYZE_PATH="/home/travis/build/gauntlt/gauntlt/vendor/sslyze/sslyze_cli.py"
   - export SQLMAP_PATH="/home/travis/build/gauntlt/gauntlt/vendor/sqlmap/sqlmap.py"
   - 'cd vendor/Garmr && sudo python setup.py install && cd ../..'
   - 'cd vendor && tar xvfz dirb222.tar.gz > /dev/null && chmod -R 755 ./dirb222 && cd ./dirb222 && ./configure && make && sudo cp dirb /usr/local/bin/ && cd ..'
   - export DIRB_WORDLISTS="/home/travis/build/gauntlt/gauntlt/vendor/dirb222/wordlists"
+  - export WORDLISTS="/home/travis/build/gauntlt/gauntlt/vendor/dirb222/wordlists"
   - 'wget $ARACHNI_URL && tar xzvf $ARACHNI-linux-x86_64.tar.gz > /dev/null && sudo ln -s $TRAVIS_BUILD_DIR/$ARACHNI/bin/* /usr/local/bin/'
-notifications:
-  slack: gauntlt:UEjUro5MQLFO1DwuETgUxb7u
+  - 'wget $GOBUSTER_URL && 7z x $GOBUSTER > /dev/null && sudo ln -s $TRAVIS_BUILD_DIR/$GOBUSTER/gobuster /usr/local/bin/'
+
